@@ -9,10 +9,9 @@ Este proyecto tiene como objetivo desarrollar una API REST utilizando Python sin
 - **Bibliotecas de Python**:
   - `mysql-connector-python` para la conexión con MySQL
   - Bibliotecas estándar de Python (`http.server`, `json`, `urllib.parse`, etc.)
-  - `swagger-ui-py` para generar documentación Swagger de los endpoints
 - **Herramientas de Prueba**:
   - Postman para probar los endpoints de la API
-  - Swagger UI para la documentación interactiva de los endpoints
+  - Pytest para las pruebas unitarias
 
 ## Proceso de Desarrollo
 
@@ -119,7 +118,7 @@ python main.py
 El servidor se ejecutará en el puerto 8080.
 
 ### 6. Probar el Endpoint
-Puedes probar el endpoint utilizando herramientas como Postman o Swagger UI:
+Puedes probar el endpoint utilizando herramientas como Postman:
 - **URL del Endpoint**: `http://localhost:8080/inmuebles`
 - **Método**: `GET`
 
