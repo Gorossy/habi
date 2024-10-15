@@ -4,7 +4,7 @@
 Este proyecto tiene como objetivo desarrollar una API REST utilizando Python sin frameworks adicionales, conectándose a una base de datos MySQL. Esta API será presentada como parte de una prueba técnica para la empresa Habi. El enfoque principal es demostrar habilidades en la creación de APIs eficientes y funcionales utilizando las bibliotecas estándar de Python y manejando la conexión a la base de datos de manera directa, sin recurrir a ORMs.
 
 ## Tecnologías Utilizadas
-- **Lenguaje de Programación**: Python 3.x
+- **Lenguaje de Programación**: Python 3.12
 - **Base de Datos**: MySQL
 - **Bibliotecas de Python**:
   - `mysql-connector-python` para la conexión con MySQL
@@ -122,3 +122,80 @@ El servidor se ejecutará en el puerto 8000.
 Puedes probar el endpoint utilizando herramientas como Postman o Swagger UI:
 - **URL del Endpoint**: `http://localhost:8000/inmuebles`
 - **Método**: `GET`
+
+## Segunda Integración: Servicio de "Me gusta"
+
+El servicio de "Me gusta" para los inmuebles se puede plantear de la siguiente manera, en términos conceptuales y técnicos:
+
+### 1. Entidades involucradas
+Para implementar esta funcionalidad, necesitaríamos crear una nueva tabla que registre los "me gusta" de los usuarios sobre los inmuebles, además de utilizar las tablas de User y Property. A continuación describo cómo se puede estructurar:
+
+- **Tabla User**: Tabla que ya existe o debe existir, donde se almacenan los usuarios registrados en la plataforma. Cada usuario tiene un ID único.
+- **Tabla Property**: Tabla que almacena los inmuebles.
+- **Tabla Likes (nueva)**: Una nueva tabla que registre los "me gusta". Esta tabla debe registrar qué usuario dio "me gusta" a qué inmueble, junto con una marca de tiempo para llevar un histórico.
+
+### 2. Estructura de la tabla Likes
+Tendríamos que crear una tabla Likes con las siguientes columnas:
+
+- **id (PK)**: Identificador único para cada registro de "me gusta".
+- **user_id (FK hacia la tabla User)**: El usuario que dio el "me gusta".
+- **property_id (FK hacia la tabla Property)**: El inmueble al que el usuario le dio "me gusta".
+- **created_at**: Fecha y hora en que se dio el "me gusta" (para llevar un historial de cuándo ocurrió).
+
+**SQL para la tabla Likes**:
+```sql
+CREATE TABLE Likes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    property_id INT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES User(id),
+    FOREIGN KEY (property_id) REFERENCES Property(id),
+    UNIQUE (user_id, property_id)  -- Un usuario solo puede dar un me gusta por propiedad
+);
+```
+
+### 3. Lógica del servicio de "Me gusta"
+Conceptualmente, los usuarios solo pueden darle "me gusta" a un inmueble una vez. Si el usuario ya dio "me gusta" a ese inmueble, no debería poder volver a darle "me gusta" hasta que retire su "me gusta". Esto puede manejarse fácilmente con la lógica de inserción en la base de datos.
+
+### 4. Endpoints requeridos
+Necesitaríamos al menos dos endpoints para este servicio:
+
+- **POST /likes**: Para que un usuario registrado le dé "me gusta" a un inmueble.
+- **DELETE /likes**: Para que un usuario pueda quitar su "me gusta" a un inmueble.
+
+
+
+
+
+### 5. Consulta para obtener el historial de "Me gusta" de un usuario
+Si deseas permitir que un usuario vea su historial de "me gusta" (a qué propiedades ha dado "me gusta"), puedes usar una consulta simple para obtener esta información.
+
+**SQL**:
+```sql
+SELECT p.address, p.city, p.price, p.description, p.year
+FROM Likes l
+JOIN Property p ON l.property_id = p.id
+WHERE l.user_id = {user_id};
+```
+
+### 6. Consideraciones adicionales:
+- **Validaciones adicionales**: Puedes agregar validaciones adicionales para asegurarte de que el `user_id` y el `property_id` existan antes de insertar o eliminar un "me gusta".
+- **Contador de "Me gusta"**: Si se desea llevar un contador de "me gusta" para cada propiedad, se podría añadir una columna en la tabla Property para almacenar este valor y actualizarlo cada vez que un usuario dé o quite un "me gusta".
+
+**Actualización del contador de "Me gusta" al añadir**:
+```sql
+UPDATE Property SET likes_count = likes_count + 1 WHERE id = {property_id};
+```
+
+**Actualización del contador de "Me gusta" al eliminar**:
+```sql
+UPDATE Property SET likes_count = likes_count - 1 WHERE id = {property_id};
+```
+
+### 7. Diagrama Entidad-Relación (ER) del Servicio de 'Me gusta'
+El servicio de 'Me gusta' se representa con tres tablas principales:
+- **User** → Relación de uno a muchos con **Likes**.
+- **Property** → Relación de uno a muchos con **Likes**.
+- **Likes** → Relación de muchos a uno con ambas tablas.
+
