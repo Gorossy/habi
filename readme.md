@@ -116,11 +116,11 @@ DB_NAME=nombre_de_la_base_de_datos
 ```bash
 python main.py
 ```
-El servidor se ejecutará en el puerto 8000.
+El servidor se ejecutará en el puerto 8080.
 
 ### 6. Probar el Endpoint
 Puedes probar el endpoint utilizando herramientas como Postman o Swagger UI:
-- **URL del Endpoint**: `http://localhost:8000/inmuebles`
+- **URL del Endpoint**: `http://localhost:8080/inmuebles`
 - **Método**: `GET`
 
 ## Segunda Integración: Servicio de "Me gusta"
@@ -199,3 +199,6 @@ El servicio de 'Me gusta' se representa con tres tablas principales:
 - **Property** → Relación de uno a muchos con **Likes**.
 - **Likes** → Relación de muchos a uno con ambas tablas.
 
+## Problemas Encontrados
+### Swagger UI con http.server
+Al intentar integrar Swagger UI con el servidor basado en http.server, se encontró que `swagger-ui-py` está diseñado para trabajar con aplicaciones basadas en WSGI (como Flask), lo cual no es compatible con `http.server`. Por lo tanto, la solución fue servir el archivo `swagger.yaml` directamente a través de una ruta (`/swagger.yaml`) y sugerir que los usuarios lo copien y lo peguen en una herramienta en línea como Swagger Editor para visualizar la documentación de la API.

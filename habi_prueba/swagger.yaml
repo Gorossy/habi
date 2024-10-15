@@ -1,0 +1,79 @@
+openapi: 3.0.0
+info:
+  title: API REST para Habi - Prueba Técnica
+  version: 1.0.0
+  description: Esta es la documentación para la API REST desarrollada para la prueba técnica de Habi.
+servers:
+  - url: http://localhost:8000
+paths:
+  /inmuebles:
+    get:
+      summary: Obtener inmuebles con filtros
+      description: Permite a los usuarios obtener una lista de inmuebles aplicando filtros como ciudad, estado y año de construcción.
+      parameters:
+        - name: city
+          in: query
+          description: Filtrar inmuebles por ciudad.
+          required: false
+          schema:
+            type: string
+        - name: status
+          in: query
+          description: Filtrar inmuebles por estado (pre_venta, en_venta, vendido).
+          required: false
+          schema:
+            type: string
+            enum:
+              - pre_venta
+              - en_venta
+              - vendido
+        - name: year
+          in: query
+          description: Filtrar inmuebles por año de construcción.
+          required: false
+          schema:
+            type: integer
+        - name: price_min
+          in: query
+          description: Precio mínimo del inmueble.
+          required: false
+          schema:
+            type: number
+        - name: price_max
+          in: query
+          description: Precio máximo del inmueble.
+          required: false
+          schema:
+            type: number
+      responses:
+        200:
+          description: Lista de inmuebles filtrados con éxito.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    address:
+                      type: string
+                      description: Dirección del inmueble.
+                    city:
+                      type: string
+                      description: Ciudad donde se encuentra el inmueble.
+                    price:
+                      type: number
+                      description: Precio de venta del inmueble.
+                    description:
+                      type: string
+                      description: Descripción del inmueble.
+                    year:
+                      type: integer
+                      description: Año de construcción del inmueble.
+                    status:
+                      type: string
+                      description: Estado del inmueble (pre_venta, en_venta, vendido).
+        400:
+          description: Solicitud incorrecta, parámetros inválidos.
+        500:
+          description: Error interno del servidor.

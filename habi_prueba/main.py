@@ -14,7 +14,15 @@ class MyServer(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        if self.path.startswith("/inmuebles"):
+
+        if self.path == "/swagger.yaml":
+            self.send_response(200)
+            self.send_header('Content-type', 'text/yaml')
+            self.end_headers()
+            with open('swagger.yaml', 'r') as file:
+                self.wfile.write(file.read().encode('utf-8'))
+
+        elif self.path.startswith("/inmuebles"):
             params = self._get_query_params()
 
             year_filter = params.get('year', None)
