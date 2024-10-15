@@ -130,7 +130,7 @@ El servicio de "Me gusta" para los inmuebles se puede plantear de la siguiente m
 ### 1. Entidades involucradas
 Para implementar esta funcionalidad, necesitaríamos crear una nueva tabla que registre los "me gusta" de los usuarios sobre los inmuebles, además de utilizar las tablas de User y Property. A continuación describo cómo se puede estructurar:
 
-- **Tabla User**: Tabla que ya existe o debe existir, donde se almacenan los usuarios registrados en la plataforma. Cada usuario tiene un ID único.
+- **Tabla User**: Tabla que ya existe donde se almacenan los usuarios registrados en la plataforma. Cada usuario tiene un ID único.
 - **Tabla Property**: Tabla que almacena los inmuebles.
 - **Tabla Likes (nueva)**: Una nueva tabla que registre los "me gusta". Esta tabla debe registrar qué usuario dio "me gusta" a qué inmueble, junto con una marca de tiempo para llevar un histórico.
 
