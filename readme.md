@@ -193,10 +193,8 @@ UPDATE Property SET likes_count = likes_count - 1 WHERE id = {property_id};
 ```
 
 ### 7. Diagrama Entidad-Relación (ER) del Servicio de 'Me gusta'
-El servicio de 'Me gusta' se representa con tres tablas principales:
-- **User** → Relación de uno a muchos con **Likes**.
-- **Property** → Relación de uno a muchos con **Likes**.
-- **Likes** → Relación de muchos a uno con ambas tablas.
+
+![Diagrama de Entidad-Relación](images/Diagrama.png)
 
 ## Problemas Encontrados
 ### Swagger UI con http.server
