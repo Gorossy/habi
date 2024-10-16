@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from database import create_connection
+from datetime import datetime
+import re
 
 load_dotenv()
 
@@ -28,6 +30,30 @@ class MyServer(BaseHTTPRequestHandler):
             year_filter = params.get('year', None)
             city_filter = params.get('city', None)
             status_filter = params.get('status', None)
+
+            # Validación del filtro de año
+            if year_filter:
+                try:
+                    year_filter = int(year_filter)
+                    current_year = datetime.now().year
+                    if year_filter > current_year:
+                        self._set_response(400, 'application/json')
+                        self.wfile.write(json.dumps({"error": "El año no puede ser superior al año actual."}).encode('utf-8'))
+                        return
+                except ValueError:
+                    self._set_response(400, 'application/json')
+                    self.wfile.write(json.dumps({"error": "El filtro de año no es válido."}).encode('utf-8'))
+                    return
+
+            if city_filter and not re.match(r'^[a-zA-Z\sÀ-ÿ]+$', city_filter):
+                self._set_response(400, 'application/json')
+                self.wfile.write(json.dumps({"error": "El filtro de ciudad contiene caracteres no permitidos."}).encode('utf-8'))
+                return
+
+            if status_filter and status_filter not in ['pre_venta', 'en_venta', 'vendido']:
+                self._set_response(400, 'application/json')
+                self.wfile.write(json.dumps({"error": "El filtro de estado no es válido."}).encode('utf-8'))
+                return
 
             connection = create_connection()
             cursor = connection.cursor(dictionary=True)

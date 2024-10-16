@@ -4,6 +4,7 @@ click==8.1.7
 colorama==0.4.6
 flasgger==0.9.7.1
 Flask==3.0.3
+iniconfig==2.0.0
 itsdangerous==2.2.0
 Jinja2==3.1.4
 jsonschema==4.23.0
@@ -12,9 +13,12 @@ MarkupSafe==3.0.1
 mistune==3.0.2
 mysql-connector-python==9.1.0
 packaging==24.1
+pluggy==1.5.0
+pytest==8.3.3
 python-dotenv==1.0.1
 PyYAML==6.0.2
 referencing==0.35.1
 rpds-py==0.20.0
 six==1.16.0
+swagger-ui-py==23.9.23
 Werkzeug==3.0.4
